@@ -142,6 +142,7 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+*.jsonl
 .dmypy.json
 dmypy.json
 
