@@ -3,8 +3,7 @@ ZIP_FILE = $(DATA_DIR)/datasets.zip
 DATASET_DIR = $(DATA_DIR)/dataset
 DATASET_URL = http://nlp.cs.aueb.gr/software_and_datasets/EURLEX57K/datasets.zip
 
-all:
-	collect 
+all: collect 
 	
 # Target to unzip datasets.zip into the ./data/dataset/ directory
 unzip: $(ZIP_FILE)
