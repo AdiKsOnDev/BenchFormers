@@ -3,3 +3,7 @@ torch
 transformers
 protobuf
 sentencepiece
+scikit-learn
+nltk
+datasets
+accelerate
