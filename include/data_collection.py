@@ -28,11 +28,11 @@ def collect_data(folders, output_csv="./data/dataset.csv"):
                         main_body = json_data.get('main_body', None)
                         doc_type = json_data.get('type', None)
 
-                        data.append({'main_body': main_body, 'type': doc_type})
+                        data.append({'text': main_body, 'label': doc_type})
                 except (json.JSONDecodeError, FileNotFoundError) as e:
                     print(f"Error processing {filename}: {e}")
 
-    df = pd.DataFrame(data, columns=['main_body', 'type'])
+    df = pd.DataFrame(data, columns=['text', 'label'])
     df.to_csv(output_csv)
 
     return df
