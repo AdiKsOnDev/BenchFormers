@@ -38,7 +38,6 @@ else:
           preprocessed_file} already exists. Skipping preprocessing.")
     df = pd.read_csv(preprocessed_file)
 
-df = pd.read_csv(dataset_file)
 df = df[:10]
 num_labels = len(df["label"].unique())
 
@@ -52,8 +51,6 @@ models = [
 ]
 
 for model in models:
-    print(f"Tokenizing for {model.model_name}")
-
     df["label"] = label_encoder.fit_transform(df["label"])
 
     texts = df["text"].tolist()
@@ -63,6 +60,8 @@ for model in models:
     train_X, test_X, train_y, test_y = train_test_split(
         texts, labels, test_size=0.8, random_state=42, stratify=labels
     )
+
+    print(f"Tokenizing for {model.model_name}")
 
     train_X = model.tokenize(train_X)
     test_X = model.tokenize(test_X)
