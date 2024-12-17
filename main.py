@@ -1,8 +1,8 @@
 import os
+import torch
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
-from datasets import Dataset
 from tqdm import tqdm
 
 from include.preprocessing import preprocess_text
@@ -16,6 +16,11 @@ tqdm.pandas()
 preprocessed_file = "./data/preprocessed.csv"
 dataset_file = "./data/dataset.csv"
 label_encoder = LabelEncoder()
+
+if torch.cuda.is_available():
+    print(f"CUDA is available. Device name: {torch.cuda.get_device_name(0)}")
+else:
+    print("CUDA is not available.")
 
 if not os.path.exists(preprocessed_file):
     print(f"{preprocessed_file} not found. Preprocessing dataset...")
@@ -33,7 +38,7 @@ else:
           preprocessed_file} already exists. Skipping preprocessing.")
     df = pd.read_csv(preprocessed_file)
 
-
+df = pd.read_csv(dataset_file)
 df = df[:10]
 num_labels = len(df["label"].unique())
 
@@ -48,14 +53,19 @@ models = [
 
 for model in models:
     print(f"Tokenizing for {model.model_name}")
-    df["text"] = df["text"].progress_apply(model.tokenize)
+
     df["label"] = label_encoder.fit_transform(df["label"])
 
+    texts = df["text"].tolist()
+    labels = df["label"].tolist()
+
+
     train_X, test_X, train_y, test_y = train_test_split(
-        df["text"], df["label"], test_size=0.8, random_state=42
+        texts, labels, test_size=0.8, random_state=42, stratify=labels
     )
 
-    print(train_X)
+    train_X = model.tokenize(train_X)
+    test_X = model.tokenize(test_X)
     train_dataset = Dataset(train_X, train_y)
     test_dataset = Dataset(test_X, test_y)
 
