@@ -1,4 +1,4 @@
-from transformers import Trainer, TrainingArguments
+from transformers import Trainer, TrainingArguments, DataCollatorWithPadding
 
 
 def fine_tune(model, training_data, testing_data):
@@ -23,11 +23,14 @@ def fine_tune(model, training_data, testing_data):
         eval_strategy="epoch"
     )
 
+    data_collator = DataCollatorWithPadding(model.tokenizer, padding='longest')
+
     trainer = Trainer(
         model=model.model,
         args=training_args,
         train_dataset=training_data,
         eval_dataset=testing_data,
+        data_collator=data_collator,
     )
 
     trainer.train()
