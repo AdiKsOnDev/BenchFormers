@@ -3,17 +3,24 @@ from transformers import Trainer, TrainingArguments
 
 def fine_tune(model, training_data, testing_data):
     training_args = TrainingArguments(
-        output_dir=f"./results/{model.model_name}",
-        evaluation_strategy="epoch",
-        learning_rate=5e-5,
-        per_device_train_batch_size=8,
-        per_device_eval_batch_size=8,
+        output_dir=f"./results/{model.model_name}/",
         num_train_epochs=3,
-        weight_decay=0.01,
+        per_device_train_batch_size=4,
+        per_device_eval_batch_size=8,
         logging_dir=f"./results/{model.model_name}/logs",
-        logging_steps=10,
         save_steps=500,
+        gradient_checkpointing=True,
+        logging_steps=10,
         save_total_limit=2,
+        save_strategy="epoch",
+        load_best_model_at_end=True,
+        metric_for_best_model="eval_f1",
+        greater_is_better=True,
+        remove_unused_columns=False,
+        fp16=True,
+        disable_tqdm=False,
+        report_to="none",
+        eval_strategy="epoch"
     )
 
     trainer = Trainer(
