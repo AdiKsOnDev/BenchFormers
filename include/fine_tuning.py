@@ -5,8 +5,8 @@ def fine_tune(model, training_data, testing_data):
     training_args = TrainingArguments(
         output_dir=f"./results/{model.model_name}/",
         num_train_epochs=3,
-        per_device_train_batch_size=4,
-        per_device_eval_batch_size=8,
+        per_device_train_batch_size=2,
+        per_device_eval_batch_size=4,
         logging_dir=f"./results/{model.model_name}/logs",
         save_steps=500,
         gradient_checkpointing=True,
