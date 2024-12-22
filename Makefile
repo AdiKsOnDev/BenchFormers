@@ -21,4 +21,7 @@ $(ZIP_FILE):
 
 collect: unzip run_script clean
 
+test:
+	python -m unittest discover -s tests
+
 .PHONY: unzip run_script clean all
