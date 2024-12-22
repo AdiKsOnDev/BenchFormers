@@ -19,7 +19,8 @@ class TestModels(unittest.TestCase):
 
         for model_name, model in self.models.items():
             with self.subTest(model=model_name):
-                inputs = model.tokenize([text], max_length=max_length)
+                model.max_length = max_length
+                inputs = model.tokenize([text])
                 self.assertIn("input_ids", inputs, f"{
                               model_name} missing input_ids")
                 self.assertEqual(
@@ -33,7 +34,8 @@ class TestModels(unittest.TestCase):
         max_length = 128
         for model_name, model in self.models.items():
             with self.subTest(model=model_name):
-                inputs = model.tokenize([text], max_length=max_length)
+                model.max_length = max_length
+                inputs = model.tokenize([text])
                 inputs = {key: torch.tensor(val)
                           for key, val in inputs.items()}
                 outputs = model.forward(inputs)
