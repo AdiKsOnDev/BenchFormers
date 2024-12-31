@@ -1,4 +1,8 @@
+import torch
+from tqdm import tqdm
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
+from torch.utils.data import DataLoader, TensorDataset
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 
 
 class BaseModel:
@@ -24,3 +28,32 @@ class BaseModel:
 
     def forward(self, inputs):
         return self.model(**inputs)
+
+
+    def predict(self, texts, batch_size=4):
+        tokenized_data = self.tokenize(texts)
+
+        input_ids = tokenized_data["input_ids"]
+        attention_mask = tokenized_data["attention_mask"]
+
+        dataset = TensorDataset(input_ids, attention_mask)
+        dataloader = DataLoader(dataset, batch_size=batch_size)
+
+        self.model.eval()
+        predictions = []
+
+        with torch.no_grad():
+            print("Predicting")
+            for batch in tqdm(dataloader, desc="Processing Batches", unit="batch"):
+                input_ids, attention_mask = [b.to(self.model.device) for b in batch]
+
+                outputs = self.forward({
+                    "input_ids": input_ids,
+                    "attention_mask": attention_mask
+                })
+                logits = outputs.logits
+
+                batch_predictions = torch.argmax(logits, dim=1).cpu().numpy()
+                predictions.extend(batch_predictions)
+
+        return predictions
