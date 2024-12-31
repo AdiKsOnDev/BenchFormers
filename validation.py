@@ -23,7 +23,6 @@ models = [
                    num_labels=num_labels)
 ]
 df["label"] = label_encoder.fit_transform(df["label"])
-df = df[:10]
 
 texts = df["text"].tolist()
 labels = df["label"].tolist()
