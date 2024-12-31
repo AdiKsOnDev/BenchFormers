@@ -10,10 +10,12 @@ from include.models.longformer import LongformerModel
 from include.models.bigbird import BigBirdModel
 from include.models.legalbert import LegalBERTModel
 from include.fine_tuning import fine_tune
+from include.utils import limit_dataset
 from include.Dataset import Dataset
 
 tqdm.pandas()
 preprocessed_file = "./data/preprocessed.csv"
+validation_file = "./data/validation.csv"
 dataset_file = "./data/dataset.csv"
 label_encoder = LabelEncoder()
 
@@ -21,6 +23,7 @@ if torch.cuda.is_available():
     print(f"CUDA is available. Device name: {torch.cuda.get_device_name(0)}")
 else:
     print("CUDA is not available.")
+    exit()
 
 if not os.path.exists(preprocessed_file):
     print(f"{preprocessed_file} not found. Preprocessing dataset...")
@@ -34,12 +37,17 @@ if not os.path.exists(preprocessed_file):
 
     print(f"Preprocessed dataset saved to {preprocessed_file}.")
 else:
-    print(f"Preprocessed file {
-          preprocessed_file} already exists. Skipping preprocessing.")
+    print(f"Preprocessed file {preprocessed_file} already exists. Skipping preprocessing.")
     df = pd.read_csv(preprocessed_file)
 
-df = df[:10]
+df = limit_dataset(df, 2500)
 num_labels = len(df["label"].unique())
+
+df, validation_df = train_test_split(
+        df, test_size=0.25, random_state=42
+    )
+
+validation_df.to_csv(validation_file)
 
 models = [
     LongformerModel(model_name="allenai/longformer-base-4096",
@@ -56,9 +64,8 @@ for model in models:
     texts = df["text"].tolist()
     labels = df["label"].tolist()
 
-
     train_X, test_X, train_y, test_y = train_test_split(
-        texts, labels, test_size=0.8, random_state=42, stratify=labels
+        texts, labels, test_size=0.25, random_state=42, stratify=labels
     )
 
     print(f"Tokenizing for {model.model_name}")
