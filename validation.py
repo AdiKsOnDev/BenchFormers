@@ -1,6 +1,7 @@
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 from sklearn.preprocessing import LabelEncoder
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 import torch
 
 from include.models.longformer import LongformerModel
@@ -22,6 +23,7 @@ models = [
                    num_labels=num_labels)
 ]
 df["label"] = label_encoder.fit_transform(df["label"])
+df = df[:10]
 
 texts = df["text"].tolist()
 labels = df["label"].tolist()
@@ -33,10 +35,10 @@ for model in models:
     decoded_predictions = label_encoder.inverse_transform(predictions)
     decoded_true_labels = label_encoder.inverse_transform(labels)
 
-    accuracy = accuracy_score(true_labels, predictions)
-    precision = precision_score(true_labels, predictions, average="weighted")
-    recall = recall_score(true_labels, predictions, average="weighted")
-    f1 = f1_score(true_labels, predictions, average="weighted")
+    accuracy = accuracy_score(decoded_true_labels, decoded_predictions)
+    precision = precision_score(decoded_true_labels, decoded_predictions, average="weighted")
+    recall = recall_score(decoded_true_labels, decoded_predictions, average="weighted")
+    f1 = f1_score(decoded_true_labels, decoded_predictions, average="weighted")
 
     metrics = {
         "accuracy": accuracy,
