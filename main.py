@@ -6,6 +6,7 @@ from sklearn.preprocessing import LabelEncoder
 from tqdm import tqdm
 
 from include.preprocessing import preprocess_text
+from include.models.basemodel import BaseModel
 from include.models.longformer import LongformerModel
 from include.models.bigbird import BigBirdModel
 from include.models.legalbert import LegalBERTModel
@@ -46,6 +47,8 @@ df, validation_df = train_test_split(
 validation_df.to_csv(validation_file)
 
 models = [
+    BaseModel(model_name="junnyu/roformer_chinese_base",
+                    num_labels=num_labels),
     LongformerModel(model_name="allenai/longformer-base-4096",
                     num_labels=num_labels, max_length=4096),
     BigBirdModel(model_name="google/bigbird-roberta-base",
