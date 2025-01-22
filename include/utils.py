@@ -1,3 +1,12 @@
+import torch
+
+def check_cuda():
+    if torch.cuda.is_available():
+        print(f"CUDA is available. Device name: {torch.cuda.get_device_name(0)}")
+    else:
+        print("CUDA is not available.")
+        exit()
+
 def limit_dataset(df, size):
     """
     Returns a dataset with a specified size after

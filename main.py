@@ -10,7 +10,7 @@ from include.models.longformer import LongformerModel
 from include.models.bigbird import BigBirdModel
 from include.models.legalbert import LegalBERTModel
 from include.fine_tuning import fine_tune
-from include.utils import limit_dataset
+from include.utils import limit_dataset, check_cuda
 from include.Dataset import Dataset
 
 tqdm.pandas()
@@ -19,11 +19,7 @@ validation_file = "./data/validation.csv"
 dataset_file = "./data/dataset.csv"
 label_encoder = LabelEncoder()
 
-if torch.cuda.is_available():
-    print(f"CUDA is available. Device name: {torch.cuda.get_device_name(0)}")
-else:
-    print("CUDA is not available.")
-    exit()
+check_cuda()
 
 if not os.path.exists(preprocessed_file):
     print(f"{preprocessed_file} not found. Preprocessing dataset...")
