@@ -4,17 +4,22 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 import torch
 
+from include.models.basemodel import BaseModel
 from include.models.longformer import LongformerModel
 from include.models.bigbird import BigBirdModel
 from include.models.legalbert import LegalBERTModel
+from include.utils import check_cuda
 
 label_encoder = LabelEncoder()
+check_cuda()
 device = torch.device("cuda")
 
 df = pd.read_csv("./data/validation.csv")
 num_labels = len(df["label"].unique())
 
 models = [
+    BaseModel(model_name="junnyu/roformer_chinese_base",
+                    num_labels=num_labels),
     LongformerModel(model_name="./results/allenai/longformer-base-4096/fine_tuned_allenai/longformer-base-4096/",
                     num_labels=num_labels, max_length=4096),
     BigBirdModel(model_name="./results/google/bigbird-roberta-base/fine_tuned_google/bigbird-roberta-base/",
