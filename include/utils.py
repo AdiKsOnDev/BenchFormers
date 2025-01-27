@@ -1,3 +1,4 @@
+import argparse
 import torch
 
 def check_cuda():
@@ -21,3 +22,20 @@ def limit_dataset(df, size):
         pd.Dataframe
     """
     return df.sample(frac=1, random_state=42).reset_index(drop=True)[:size]
+
+def parse_arguments():
+    parser = argparse.ArgumentParser(description="Parse arguments for a data processing task.")
+    parser.add_argument(
+        "--dataset_size",
+        type=int,
+        required=True,
+        help="The size of the dataset."
+    )
+    parser.add_argument(
+        "--results_dir",
+        type=str,
+        required=True,
+        help="The directory to save the models."
+    )
+    args = parser.parse_args()
+    return args

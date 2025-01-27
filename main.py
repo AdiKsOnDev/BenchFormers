@@ -11,14 +11,17 @@ from include.models.longformer import LongformerModel
 from include.models.bigbird import BigBirdModel
 from include.models.legalbert import LegalBERTModel
 from include.fine_tuning import fine_tune
-from include.utils import limit_dataset, check_cuda
+from include.utils import limit_dataset, check_cuda, parse_arguments
 from include.Dataset import Dataset
 
+args = parse_arguments()
 tqdm.pandas()
 preprocessed_file = "./data/preprocessed.csv"
 validation_file = "./data/validation.csv"
 dataset_file = "./data/dataset.csv"
 label_encoder = LabelEncoder()
+dataset_size = args.dataset_size
+results_dir = args.results_dir
 
 check_cuda()
 
@@ -37,7 +40,7 @@ else:
     print(f"Preprocessed file {preprocessed_file} already exists. Skipping preprocessing.")
     df = pd.read_csv(preprocessed_file)
 
-df = limit_dataset(df, 2500)
+df = limit_dataset(df, dataset_size)
 num_labels = len(df["label"].unique())
 
 df, validation_df = train_test_split(
@@ -74,4 +77,4 @@ for model in models:
     train_dataset = Dataset(train_X, train_y)
     test_dataset = Dataset(test_X, test_y)
 
-    fine_tune(model, train_dataset, test_dataset)
+    fine_tune(model, train_dataset, test_dataset, results_dir)
