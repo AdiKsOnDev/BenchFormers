@@ -1,13 +1,13 @@
 from transformers import Trainer, TrainingArguments, DataCollatorWithPadding
 
 
-def fine_tune(model, training_data, testing_data):
+def fine_tune(model, training_data, testing_data, results_dir="./results/"):
     training_args = TrainingArguments(
-        output_dir=f"./results/{model.model_name}/",
+        output_dir=f"{results_dir}{model.model_name}/",
         num_train_epochs=3,
         per_device_train_batch_size=2,
         per_device_eval_batch_size=4,
-        logging_dir=f"./results/{model.model_name}/logs",
+        logging_dir=f"{results_dir}{model.model_name}/logs",
         save_steps=500,
         gradient_checkpointing=True,
         logging_steps=10,
@@ -36,6 +36,6 @@ def fine_tune(model, training_data, testing_data):
     trainer.train()
 
     model.model.save_pretrained(
-        f"results/{model.model_name}/fine_tuned_{model.model_name}")
+        f"{results_dir}/{model.model_name}/fine_tuned_{model.model_name}")
     model.tokenizer.save_pretrained(
-        f"results/{model.model_name}/fine_tuned_{model.model_name}")
+        f"{results_dir}/{model.model_name}/fine_tuned_{model.model_name}")
