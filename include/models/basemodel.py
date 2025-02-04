@@ -42,7 +42,8 @@ class BaseModel:
         predictions = []
 
         with torch.no_grad():
-            print("Predicting")
+            print(f"{self.model.__class__.__name__} is Predicting")
+
             for batch in tqdm(dataloader, desc="Processing Batches", unit="batch"):
                 input_ids, attention_mask = [b.to(self.model.device) for b in batch]
 

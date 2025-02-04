@@ -38,4 +38,18 @@ def parse_arguments():
         help="The directory to save the models."
     )
     args = parser.parse_args()
+
+    return args
+
+def parse_validation_arguments():
+    parser = argparse.ArgumentParser(description="Parse arguments for a data processing task.")
+
+    parser.add_argument(
+        "--dir",
+        type=str,
+        required=True,
+        help="The directory of the fine-tuned models."
+    )
+
+    args = parser.parse_args()
     return args
