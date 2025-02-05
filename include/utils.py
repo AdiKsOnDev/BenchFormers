@@ -1,11 +1,14 @@
+import logging
 import argparse
 import torch
 
+include_logger = logging.getLogger('include')
+
 def check_cuda():
     if torch.cuda.is_available():
-        print(f"CUDA is available. Device name: {torch.cuda.get_device_name(0)}")
+        include_logger.info(f"CUDA is available. Device name: {torch.cuda.get_device_name(0)}")
     else:
-        print("CUDA is not available.")
+        include_logger.error("CUDA is not available.")
         exit()
 
 def limit_dataset(df, size):
@@ -21,6 +24,7 @@ def limit_dataset(df, size):
     Return:
         pd.Dataframe
     """
+    include_logger.debug(f"Limiting dataset dow to {size} samples")
     return df.sample(frac=1, random_state=42).reset_index(drop=True)[:size]
 
 def parse_arguments():
