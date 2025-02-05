@@ -16,7 +16,9 @@ from include.utils import limit_dataset, check_cuda, parse_arguments
 from include.Dataset import Dataset
 
 args = parse_arguments()
-main_logger = logging.getLogger('main'))
+main_logger = logging.getLogger('main')
+include_logger = logging.getLogger('include')
+models_logger = logging.getLogger('models')
 tqdm.pandas()
 preprocessed_file = "./data/preprocessed.csv"
 validation_file = "./data/validation.csv"
@@ -24,6 +26,21 @@ dataset_file = "./data/dataset.csv"
 label_encoder = LabelEncoder()
 dataset_size = args.dataset_size
 results_dir = args.results_dir
+log_level = logging.DEBUG
+
+logging.basicConfig(
+    level=logging.WARNING,
+    format="%(name)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s"
+)
+main_logger.setLevel(
+    log_level
+)
+include_logger.setLevel(
+    log_level
+)
+models_logger.setLevel(
+    log_level
+)
 
 check_cuda()
 

@@ -1,11 +1,16 @@
 import torch
+import logging
 from tqdm import tqdm
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 from torch.utils.data import DataLoader, TensorDataset
 
+models_logger = logging.getLogger('models')
 
 class BaseModel:
     def __init__(self, model_name, num_labels=2, max_length=512):
+        models_logger.debug(f"{model_name} initialised with: \
+                \n{num_labels} labels \
+                \nmax length of {max_length}")
         self.model_name = model_name
         self.num_labels = num_labels
         self.max_length = max_length
@@ -15,8 +20,10 @@ class BaseModel:
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
         self.model = AutoModelForSequenceClassification.from_pretrained(
             model_name, num_labels=num_labels)
+        models_logger.debug(f"Tokenizer and the model for {self.model_name} are initialised")
 
     def tokenize(self, texts):
+        models_logger.debug(f"Tokenising {len(texts)} texts")
         return self.tokenizer(
             texts,
             max_length=self.max_length,
@@ -42,7 +49,7 @@ class BaseModel:
         predictions = []
 
         with torch.no_grad():
-            print(f"{self.model.__class__.__name__} is Predicting")
+            models_logger.info(f"{self.model.__class__.__name__} is Predicting")
 
             for batch in tqdm(dataloader, desc="Processing Batches", unit="batch"):
                 input_ids, attention_mask = [b.to(self.model.device) for b in batch]
@@ -56,4 +63,5 @@ class BaseModel:
                 batch_predictions = torch.argmax(logits, dim=1).cpu().numpy()
                 predictions.extend(batch_predictions)
 
+        models_logger.debug("{model.name} successfully predicted the given text")
         return predictions
