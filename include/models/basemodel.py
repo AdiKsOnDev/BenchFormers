@@ -20,7 +20,7 @@ class BaseModel:
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
         self.model = AutoModelForSequenceClassification.from_pretrained(
             model_name, num_labels=num_labels)
-        models_logger.debug("Tokenizer and the model are initialised")
+        models_logger.debug(f"Tokenizer and the model for {self.model_name} are initialised")
 
     def tokenize(self, texts):
         models_logger.debug(f"Tokenising {len(texts)} texts")
