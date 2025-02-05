@@ -15,6 +15,10 @@ from include.fine_tuning import fine_tune
 from include.utils import limit_dataset, check_cuda, parse_arguments
 from include.Dataset import Dataset
 
+logging.basicConfig(
+    level=logging.DEBUG,
+    format="%(name)s - %(levelname)s - %(filename)s - %(message)s"
+)
 args = parse_arguments()
 main_logger = logging.getLogger('main'))
 tqdm.pandas()

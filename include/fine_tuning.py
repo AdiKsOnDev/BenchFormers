@@ -1,7 +1,12 @@
+import logging
 from transformers import Trainer, TrainingArguments, DataCollatorWithPadding
 
+include_logger = logging.getLogger('include')
 
 def fine_tune(model, training_data, testing_data, results_dir="./results/"):
+    include_logger.debug(f"Fine tuning {model.model_name}")
+    include_logger.debug(f"Model will be saved in {results_dir}")
+
     training_args = TrainingArguments(
         output_dir=f"{results_dir}{model.model_name}/",
         num_train_epochs=3,
@@ -22,6 +27,7 @@ def fine_tune(model, training_data, testing_data, results_dir="./results/"):
         report_to="none",
         eval_strategy="epoch"
     )
+    include_logger.debug("Training Args Created")
 
     data_collator = DataCollatorWithPadding(model.tokenizer, padding='longest')
 
@@ -33,7 +39,11 @@ def fine_tune(model, training_data, testing_data, results_dir="./results/"):
         data_collator=data_collator,
     )
 
+    include_logger.debug("Trainer object created")
+    
     trainer.train()
+
+    include_logger.debug("Training Successful")
 
     model.model.save_pretrained(
         f"{results_dir}/{model.model_name}/fine_tuned_{model.model_name}")
