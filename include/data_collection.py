@@ -1,7 +1,9 @@
 import os
 import json
+import logging
 import pandas as pd
 
+include_logger = logging.getLogger('include')
 
 def collect_data(folders, output_csv="./data/dataset.csv"):
     """
@@ -30,10 +32,11 @@ def collect_data(folders, output_csv="./data/dataset.csv"):
 
                         data.append({'text': main_body, 'label': doc_type})
                 except (json.JSONDecodeError, FileNotFoundError) as e:
-                    print(f"Error processing {filename}: {e}")
+                    include_logger.error(f"Error processing {filename}", exc_info=True)
 
     df = pd.DataFrame(data, columns=['text', 'label'])
     df.to_csv(output_csv)
+    include_logger.debug(f"DataFrame saved in {output_csv}")
 
     return df
 
