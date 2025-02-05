@@ -1,5 +1,6 @@
 import os
 import torch
+import logging
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
@@ -15,6 +16,7 @@ from include.utils import limit_dataset, check_cuda, parse_arguments
 from include.Dataset import Dataset
 
 args = parse_arguments()
+main_logger = logging.getLogger('main'))
 tqdm.pandas()
 preprocessed_file = "./data/preprocessed.csv"
 validation_file = "./data/validation.csv"
@@ -26,7 +28,7 @@ results_dir = args.results_dir
 check_cuda()
 
 if not os.path.exists(preprocessed_file):
-    print(f"{preprocessed_file} not found. Preprocessing dataset...")
+    main_logger.warning(f"{preprocessed_file} not found. Preprocessing dataset...")
 
     df = pd.read_csv(dataset_file)
 
@@ -35,9 +37,9 @@ if not os.path.exists(preprocessed_file):
     os.makedirs("./data", exist_ok=True)
     df.to_csv(preprocessed_file, index=False)
 
-    print(f"Preprocessed dataset saved to {preprocessed_file}.")
+    main_logger.info(f"Preprocessed dataset saved to {preprocessed_file}.")
 else:
-    print(f"Preprocessed file {preprocessed_file} already exists. Skipping preprocessing.")
+    main_logger.warning(f"Preprocessed file {preprocessed_file} already exists. Skipping preprocessing.")
     df = pd.read_csv(preprocessed_file)
 
 df = limit_dataset(df, dataset_size)
@@ -61,6 +63,8 @@ models = [
 ]
 
 for model in models:
+    main_logger.debug(f"Started the pipeline for {model.model_name}")
+
     df["label"] = label_encoder.fit_transform(df["label"])
 
     texts = df["text"].tolist()
@@ -70,11 +74,12 @@ for model in models:
         texts, labels, test_size=0.25, random_state=42, stratify=labels
     )
 
-    print(f"Tokenizing for {model.model_name}")
+    main_logger.info(f"Tokenizing for {model.model_name}")
 
     train_X = model.tokenize(train_X)
     test_X = model.tokenize(test_X)
     train_dataset = Dataset(train_X, train_y)
     test_dataset = Dataset(test_X, test_y)
 
+    main_logger.debug(f"About to start fine-tuning {model.model_name}")
     fine_tune(model, train_dataset, test_dataset, results_dir)
