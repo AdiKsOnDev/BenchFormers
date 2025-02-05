@@ -8,9 +8,9 @@ models_logger = logging.getLogger('models')
 
 class BaseModel:
     def __init__(self, model_name, num_labels=2, max_length=512):
-        models_logger.debug(f"{model_name} initialised with: 
-                            \n{num_labels} labels 
-                            \nmax length of {max_length}")
+        models_logger.debug(f"{model_name} initialised with: \
+                \n{num_labels} labels \
+                \nmax length of {max_length}")
         self.model_name = model_name
         self.num_labels = num_labels
         self.max_length = max_length
