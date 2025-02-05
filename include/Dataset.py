@@ -1,8 +1,11 @@
 import torch
+import logging
 
+include_logger = logging.getLogger('include')
 
 class Dataset(torch.utils.data.Dataset):
     def __init__(self, encodings, labels):
+        include_logger.debug("Dataset object created")
         self.encodings = encodings
         self.labels = labels
 
