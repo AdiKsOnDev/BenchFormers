@@ -21,8 +21,7 @@ class TestModels(unittest.TestCase):
             with self.subTest(model=model_name):
                 model.max_length = max_length
                 inputs = model.tokenize([text])
-                self.assertIn("input_ids", inputs, f"{
-                              model_name} missing input_ids")
+                self.assertIn("input_ids", inputs, f"{model_name} missing input_ids")
                 self.assertEqual(
                     inputs["input_ids"].shape[1],
                     max_length,
