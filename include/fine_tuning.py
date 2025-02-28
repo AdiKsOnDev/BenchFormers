@@ -20,7 +20,6 @@ def fine_tune(model, training_data, testing_data, results_dir="./results/"):
         save_strategy="epoch",
         load_best_model_at_end=True,
         metric_for_best_model="eval_loss",
-        greater_is_better=True,
         remove_unused_columns=False,
         fp16=True,
         disable_tqdm=False,
