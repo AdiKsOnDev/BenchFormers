@@ -59,8 +59,7 @@ if not os.path.exists(preprocessed_file):
 
     main_logger.info(f"Preprocessed dataset saved to {preprocessed_file}.")
 else:
-    main_logger.warning(f"Preprocessed file {
-                        preprocessed_file} already exists. Skipping preprocessing.")
+    main_logger.warning(f"Preprocessed file {preprocessed_file} already exists. Skipping preprocessing.")
     df = pd.read_csv(preprocessed_file)
 
 df = limit_dataset(df, dataset_size)
