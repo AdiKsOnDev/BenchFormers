@@ -11,6 +11,9 @@ collect: unzip run_script clean
 setup:
 	pip install -r requirements.txt
 
+run1k:
+	python main.py --dataset_size 1000 --results_dir "./results/1000Samples/"
+
 run2k:
 	python main.py --dataset_size 2500 --results_dir "./results/2500Samples/"
 
