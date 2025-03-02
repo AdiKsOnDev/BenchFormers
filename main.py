@@ -20,9 +20,11 @@ main_logger = logging.getLogger('main')
 include_logger = logging.getLogger('include')
 models_logger = logging.getLogger('models')
 tqdm.pandas()
+
 preprocessed_file = "./data/preprocessed.csv"
 validation_file = "./data/validation.csv"
 dataset_file = "./data/dataset.csv"
+
 label_encoder = LabelEncoder()
 dataset_size = args.dataset_size
 results_dir = args.results_dir
@@ -45,7 +47,8 @@ models_logger.setLevel(
 check_cuda()
 
 if not os.path.exists(preprocessed_file):
-    main_logger.warning(f"{preprocessed_file} not found. Preprocessing dataset...")
+    main_logger.warning(
+        f"{preprocessed_file} not found. Preprocessing dataset...")
 
     df = pd.read_csv(dataset_file)
 
@@ -56,21 +59,22 @@ if not os.path.exists(preprocessed_file):
 
     main_logger.info(f"Preprocessed dataset saved to {preprocessed_file}.")
 else:
-    main_logger.warning(f"Preprocessed file {preprocessed_file} already exists. Skipping preprocessing.")
+    main_logger.warning(f"Preprocessed file {
+                        preprocessed_file} already exists. Skipping preprocessing.")
     df = pd.read_csv(preprocessed_file)
 
 df = limit_dataset(df, dataset_size)
 num_labels = len(df["label"].unique())
 
 df, validation_df = train_test_split(
-        df, test_size=0.25, random_state=42
-    )
+    df, test_size=0.25, random_state=42
+)
 
 validation_df.to_csv(validation_file)
 
 models = [
     RoformerModel(model_name="junnyu/roformer_chinese_base",
-                    num_labels=num_labels),
+                  num_labels=num_labels),
     LongformerModel(model_name="allenai/longformer-base-4096",
                     num_labels=num_labels, max_length=4096),
     BigBirdModel(model_name="google/bigbird-roberta-base",
