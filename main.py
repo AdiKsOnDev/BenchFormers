@@ -67,7 +67,7 @@ df = limit_dataset(df, dataset_size)
 num_labels = len(df["label"].unique())
 
 df, validation_df = train_test_split(
-    df, test_size=0.25, random_state=42
+    df, test_size=0.25, random_state=42, stratify=df["label"]
 )
 
 validation_df.to_csv(validation_file)
