@@ -28,7 +28,7 @@ dataset_file = "./data/dataset.csv"
 label_encoder = LabelEncoder()
 dataset_size = args.dataset_size
 results_dir = args.results_dir
-log_level = logging.DEBUG
+log_level = logging.INFO
 
 logging.basicConfig(
     level=logging.WARNING,
@@ -51,9 +51,10 @@ if not os.path.exists(preprocessed_file):
         f"{preprocessed_file} not found. Preprocessing dataset...")
 
     df = pd.read_csv(dataset_file)
-
+    main_logger.info(f"Dataset loaded from {dataset_file}")
+    main_logger.info(f"Preprocessing dataset...")
     df["text"] = df["text"].apply(preprocess_text)
-
+    main_logger.info(f"Dataset preprocessed.")
     os.makedirs("./data", exist_ok=True)
     df.to_csv(preprocessed_file, index=False)
 
