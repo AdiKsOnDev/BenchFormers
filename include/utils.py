@@ -77,7 +77,7 @@ def parse_arguments():
         "--model",
         type=str,
         required=True,
-        help="Can be: 1. roformer 2. longformer 3. bigbird 4. legalbert 5. all"
+        help="Can be: 1. roformer 2. longformer 3. bigbird 4. legalbert"
     )
     args = parser.parse_args()
 
