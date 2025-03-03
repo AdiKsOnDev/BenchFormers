@@ -2,6 +2,11 @@ import logging
 import argparse
 import torch
 
+from include.models.roformer import RoformerModel
+from include.models.longformer import LongformerModel
+from include.models.bigbird import BigBirdModel
+from include.models.legalbert import LegalBERTModel
+
 include_logger = logging.getLogger('include')
 
 def check_cuda():
@@ -27,6 +32,33 @@ def limit_dataset(df, size):
     include_logger.debug(f"Limiting dataset dow to {size} samples")
     return df.sample(frac=1, random_state=42).reset_index(drop=True)[:size]
 
+
+def models(choice, num_labels):
+    models = [
+        RoformerModel(model_name="junnyu/roformer_chinese_base",
+                      num_labels=num_labels),
+        LongformerModel(model_name="allenai/longformer-base-4096",
+                        num_labels=num_labels, max_length=4096),
+        BigBirdModel(model_name="google/bigbird-roberta-base",
+                     num_labels=num_labels, max_length=4096),
+        LegalBERTModel(model_name="nlpaueb/legal-bert-base-uncased",
+                       num_labels=num_labels)
+    ]
+
+    if choice.lower() == "all":
+        return models
+    elif choice.lower() == "roformer":
+        return models[0]
+    elif choice.lower() == "longformer":
+        return models[1]
+    elif choice.lower() == "bigbird":
+        return models[2]
+    elif choice.lower() == "legalbert":
+        return models[3]
+    else:
+        raise ValueError(f"{choice} is not a valid choice of models!")
+
+
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Parse arguments for a data processing task.")
     parser.add_argument(
@@ -41,6 +73,12 @@ def parse_arguments():
         required=True,
         help="The directory to save the models."
     )
+    parser.add_argument(
+        "--model",
+        type=str,
+        required=True,
+        help="Can be: 1. roformer 2. longformer 3. bigbird 4. legalbert 5. all"
+    )
     args = parser.parse_args()
 
     return args
@@ -54,6 +92,12 @@ def parse_validation_arguments():
         required=True,
         help="The directory of the fine-tuned models."
     )
-
+    parser.add_argument(
+        "--model",
+        type=str,
+        required=True,
+        help="Can be: 1. roformer 2. longformer 3. bigbird 4. legalbert 5. all"
+    )
     args = parser.parse_args()
+
     return args

@@ -7,12 +7,8 @@ from sklearn.preprocessing import LabelEncoder
 from tqdm import tqdm
 
 from include.preprocessing import preprocess_text
-from include.models.roformer import RoformerModel
-from include.models.longformer import LongformerModel
-from include.models.bigbird import BigBirdModel
-from include.models.legalbert import LegalBERTModel
 from include.fine_tuning import fine_tune
-from include.utils import limit_dataset, check_cuda, parse_arguments
+from include.utils import limit_dataset, check_cuda, parse_arguments, models
 from include.Dataset import Dataset
 
 args = parse_arguments()
@@ -29,6 +25,7 @@ dataset_file = "./data/dataset.csv"
 label_encoder = LabelEncoder()
 dataset_size = args.dataset_size
 results_dir = args.results_dir
+choice = args.model
 log_level = logging.INFO
 
 logging.basicConfig(
@@ -73,16 +70,13 @@ df, validation_df = train_test_split(
 
 validation_df.to_csv(validation_file)
 
-models = [
-    RoformerModel(model_name="junnyu/roformer_chinese_base",
-                  num_labels=num_labels),
-    LongformerModel(model_name="allenai/longformer-base-4096",
-                    num_labels=num_labels, max_length=4096),
-    BigBirdModel(model_name="google/bigbird-roberta-base",
-                 num_labels=num_labels, max_length=4096),
-    LegalBERTModel(model_name="nlpaueb/legal-bert-base-uncased",
-                   num_labels=num_labels)
-]
+models = models(choice, num_labels)
+
+for index, model in enumerate(models):
+    answer = input(f"Do you want to train {model.model_name}? Y/N").lower()
+    
+    if answer == "n":
+        models.remove(index)
 
 for model in models:
     main_logger.debug(f"Started the pipeline for {model.model_name}")
