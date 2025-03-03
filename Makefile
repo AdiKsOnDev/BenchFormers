@@ -12,16 +12,16 @@ setup:
 	pip install -r requirements.txt
 
 run1k:
-	python main.py --dataset_size 1000 --results_dir "./results/1000Samples/" --models "all"
+	python main.py --dataset_size 1000 --results_dir "./results/1000Samples/" --model "all"
 
 run2k:
-	python main.py --dataset_size 2500 --results_dir "./results/2500Samples/" --models "all"
+	python main.py --dataset_size 2500 --results_dir "./results/2500Samples/" --model "all"
 
 run5k:
-	python main.py --dataset_size 5000 --results_dir "./results/5000Samples/" --models "all"
+	python main.py --dataset_size 5000 --results_dir "./results/5000Samples/" --model "all"
 
 run10k:
-	python main.py --dataset_size 10000 --results_dir "./results/10000Samples/" --models "all"
+	python main.py --dataset_size 10000 --results_dir "./results/10000Samples/" --model "all"
 
 test: setup
 	python -m unittest discover -s tests
