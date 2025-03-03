@@ -19,6 +19,7 @@ args = parse_arguments()
 main_logger = logging.getLogger('main')
 include_logger = logging.getLogger('include')
 models_logger = logging.getLogger('models')
+os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
 tqdm.pandas()
 
 preprocessed_file = "./data/preprocessed.csv"
@@ -73,8 +74,8 @@ df, validation_df = train_test_split(
 validation_df.to_csv(validation_file)
 
 models = [
-    RoformerModel(model_name="junnyu/roformer_chinese_base",
-                  num_labels=num_labels),
+    # RoformerModel(model_name="junnyu/roformer_chinese_base",
+    #               num_labels=num_labels),
     LongformerModel(model_name="allenai/longformer-base-4096",
                     num_labels=num_labels, max_length=4096),
     BigBirdModel(model_name="google/bigbird-roberta-base",
