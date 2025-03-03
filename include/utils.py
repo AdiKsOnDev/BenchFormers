@@ -48,13 +48,13 @@ def models(choice, num_labels):
     if choice.lower() == "all":
         return models
     elif choice.lower() == "roformer":
-        return models[0]
+        return [models[0]]
     elif choice.lower() == "longformer":
-        return models[1]
+        return [models[1]]
     elif choice.lower() == "bigbird":
-        return models[2]
+        return [models[2]]
     elif choice.lower() == "legalbert":
-        return models[3]
+        return [models[3]]
     else:
         raise ValueError(f"{choice} is not a valid choice of models!")
 
