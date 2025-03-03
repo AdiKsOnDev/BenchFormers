@@ -72,12 +72,6 @@ validation_df.to_csv(validation_file)
 
 models = models(choice, num_labels)
 
-for index, model in enumerate(models):
-    answer = input(f"Do you want to train {model.model_name}? Y/N").lower()
-    
-    if answer == "n":
-        models.remove(index)
-
 for model in models:
     main_logger.debug(f"Started the pipeline for {model.model_name}")
 
