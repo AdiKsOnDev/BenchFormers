@@ -60,13 +60,15 @@ for model in models:
     accuracy = accuracy_score(decoded_true_labels, decoded_predictions)
     precision = precision_score(decoded_true_labels, decoded_predictions)
     recall = recall_score(decoded_true_labels, decoded_predictions)
-    f1 = f1_score(decoded_true_labels, decoded_predictions, average="macro")
+    f1 = f1_score(decoded_true_labels, decoded_predictions)
+    f1_macro = f1_score(decoded_true_labels, decoded_predictions, average="macro")
 
     metrics = {
         "Accuracy": accuracy,
         "Precision": precision,
         "Recall": recall,
-        "Macro F1_Score": f1,
+        "F1_Score": f1,
+        "Macro F1_Score": f1_macro,
     }
 
     for metric, value in metrics.items():
