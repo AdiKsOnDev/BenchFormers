@@ -4,7 +4,7 @@ import pandas as pd
 from include.utils import limit_dataset
 
 
-class TestModels(unittest.TestCase):
+class TestUtils(unittest.TestCase):
     def setUp(self):
         self.df = pd.DataFrame(
             {'A': [1, 2, 3, 4, 5], 'B': [10, 20, 30, 40, 50]})
