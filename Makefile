@@ -35,6 +35,30 @@ run10k:
 	python main.py --dataset_size 10000 --results_dir "./results/10000Samples/" --model "bigbird"
 	python main.py --dataset_size 10000 --results_dir "./results/10000Samples/" --model "legalbert"
 
+eval1k:
+	python validation.py --dir "./results/1000Samples/" --model "roformer"
+	python validation.py --dir "./results/1000Samples/" --model "longformer"
+	python validation.py --dir "./results/1000Samples/" --model "bigbird"
+	python validation.py --dir "./results/1000Samples/" --model "legalbert"
+
+eval2k:
+	python validation.py --dir "./results/2500Samples/" --model "roformer"
+	python validation.py --dir "./results/2500Samples/" --model "longformer"
+	python validation.py --dir "./results/2500Samples/" --model "bigbird"
+	python validation.py --dir "./results/2500Samples/" --model "legalbert"
+
+eval5k:
+	python validation.py --dir "./results/5000Samples/" --model "roformer"
+	python validation.py --dir "./results/5000Samples/" --model "longformer"
+	python validation.py --dir "./results/5000Samples/" --model "bigbird"
+	python validation.py --dir "./results/5000Samples/" --model "legalbert"
+
+eval10k:
+	python validation.py --dir "./results/10000Samples/" --model "roformer"
+	python validation.py --dir "./results/10000Samples/" --model "longformer"
+	python validation.py --dir "./results/10000Samples/" --model "bigbird"
+	python validation.py --dir "./results/10000Samples/" --model "legalbert"
+
 test: setup
 	python -m unittest discover -s tests
 
