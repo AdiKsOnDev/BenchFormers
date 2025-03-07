@@ -61,6 +61,9 @@ else:
     main_logger.warning(f"Preprocessed file {preprocessed_file} already exists. Skipping preprocessing.")
     df = pd.read_csv(preprocessed_file)
 
+validation_df = limit_dataset(df, 25.000)  # Seperate a set just for final validation
+
+df = pd.concat([df, validation_df]).drop_duplicates(keep=False)
 df = limit_dataset(df, dataset_size)
 num_labels = len(df["label"].unique())
 
