@@ -61,15 +61,14 @@ else:
     main_logger.warning(f"Preprocessed file {preprocessed_file} already exists. Skipping preprocessing.")
     df = pd.read_csv(preprocessed_file)
 
-validation_df = limit_dataset(df, 25.000)  # Seperate a set just for final validation
+validation_df = limit_dataset(df, 25000)  # Seperate a set just for final validation
 
+# This will take the difference between the validation set and full set, to ensure there
+# is no data leakage
 df = pd.concat([df, validation_df]).drop_duplicates(keep=False)
+
 df = limit_dataset(df, dataset_size)
 num_labels = len(df["label"].unique())
-
-df, validation_df = train_test_split(
-    df, test_size=0.25, random_state=42, stratify=df["label"]
-)
 
 validation_df.to_csv(validation_file)
 
