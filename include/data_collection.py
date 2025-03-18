@@ -42,5 +42,6 @@ def collect_data(folders, output_csv="./data/dataset.csv"):
 
 
 if __name__ == "__main__":
-    collect_data(folders=["./data/dataset/dataset/train/",
-                 "./data/dataset/dataset/test"])
+    collect_data(["./data/dataset/dataset/train/"], 'train.csv')
+    collect_data(["./data/dataset/dataset/test/"], 'test.csv')
+    collect_data(["./data/dataset/dataset/test"], 'validation.csv')

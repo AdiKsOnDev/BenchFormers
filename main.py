@@ -3,7 +3,7 @@ import logging
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
-from tqdm import tqdm
+from tqdm import main, tqdm
 
 from include.preprocessing import preprocess_text
 from include.fine_tuning import fine_tune
@@ -17,9 +17,9 @@ models_logger = logging.getLogger('models')
 os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
 tqdm.pandas()
 
-preprocessed_file = "./data/preprocessed.csv"
+train_file = "./data/train.csv"
+test_file = "./data/test.csv"
 validation_file = "./data/validation.csv"
-dataset_file = "./data/dataset.csv"
 
 label_encoder = LabelEncoder()
 dataset_size = args.dataset_size
@@ -43,52 +43,41 @@ models_logger.setLevel(
 
 check_cuda()
 
-if not os.path.exists(preprocessed_file):
+if not os.path.exists('./data/preprocessed/'):
     main_logger.warning(
-        f"{preprocessed_file} not found. Preprocessing dataset...")
+        f"Preprocessed files not found. Preprocessing dataset...")
 
-    df = pd.read_csv(dataset_file)
-    main_logger.info(f"Dataset loaded from {dataset_file}")
-    main_logger.info(f"Preprocessing dataset...")
-    df["text"] = df["text"].apply(preprocess_text)
-    main_logger.info(f"Dataset preprocessed.")
-    os.makedirs("./data", exist_ok=True)
-    df.to_csv(preprocessed_file, index=False)
+    for dataset_file in [train_file, test_file, validation_file]:
+        df = pd.read_csv(dataset_file)
+        main_logger.info(f"Dataset loaded from {dataset_file}")
+        main_logger.info(f"Preprocessing dataset...")
+        df["text"] = df["text"].apply(preprocess_text)
 
-    main_logger.info(f"Preprocessed dataset saved to {preprocessed_file}.")
+        df["label"] = label_encoder.fit_transform(df['label'])
+        main_logger.info(f"Dataset preprocessed.")
+
+        os.makedirs("./data/preprocessed/", exist_ok=True)
+        df.to_csv(f"./data/preprocessed/p_{dataset_file}", index=False)
+        main_logger.info(f"Preprocessed dataset saved to ./data/preprocessed/p_{dataset_file}.")
 else:
-    main_logger.warning(f"Preprocessed file {preprocessed_file} already exists. Skipping preprocessing.")
-    df = pd.read_csv(preprocessed_file)
+    main_logger.warning(f"Preprocessed files already exists. Skipping preprocessing.")
 
-validation_df = limit_dataset(df, 25000)  # Seperate a set just for final validation
+train_df = limit_dataset(pd.read_csv(train_file), dataset_size)
+test_df = pd.read_csv(test_file)
 
-# This will take the difference between the validation set and full set, to ensure there
-# is no data leakage
-df = pd.concat([df, validation_df]).drop_duplicates(keep=False)
-
-df = limit_dataset(df, dataset_size)
-num_labels = len(df["label"].unique())
-
-validation_df.to_csv(validation_file)
-
+num_labels = len(train_df['label'].unique())
 models = models(choice, num_labels)
 
 for model in models:
     main_logger.debug(f"Started the pipeline for {model.model_name}")
 
-    df["label"] = label_encoder.fit_transform(df["label"])
-
-    texts = df["text"].tolist()
-    labels = df["label"].tolist()
-
-    train_X, test_X, train_y, test_y = train_test_split(
-        texts, labels, test_size=0.25, random_state=42, stratify=labels
-    )
+    train_y = train_df['label']
+    test_y = test_df['label']
 
     main_logger.info(f"Tokenizing for {model.model_name}")
 
-    train_X = model.tokenize(train_X)
-    test_X = model.tokenize(test_X)
+    train_X = model.tokenize(train_df['text'])
+    test_X = model.tokenize(test_df['text'])
     train_dataset = Dataset(train_X, train_y)
     test_dataset = Dataset(test_X, test_y)
 
