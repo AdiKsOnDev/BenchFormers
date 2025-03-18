@@ -1,7 +1,6 @@
-import pandas as pd
-from sklearn.preprocessing import LabelEncoder
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 import torch
+import pandas as pd
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 
 from include.models.roformer import RoformerModel
 from include.models.longformer import LongformerModel
@@ -9,14 +8,13 @@ from include.models.bigbird import BigBirdModel
 from include.models.legalbert import LegalBERTModel
 from include.utils import check_cuda, parse_validation_arguments
 
-label_encoder = LabelEncoder()
 check_cuda()
 device = torch.device("cuda")
 args = parse_validation_arguments()
 
 directory = args.dir
 choice = args.model
-df = pd.read_csv("./data/validation.csv")
+df = pd.read_csv("./data/preprocessed/p_validation.csv")
 num_labels = len(df["label"].unique())
 
 models = []
@@ -43,24 +41,17 @@ elif choice.lower() == "legalbert":
     )
 
 
-df["label"] = label_encoder.fit_transform(df["label"])
-
 texts = df["text"].tolist()
 labels = df["label"].tolist()
-results = []
 
 for model in models:
     model.model = model.model.to(device)
     predictions = model.predict(texts)
 
-    decoded_predictions = label_encoder.inverse_transform(predictions)
-    decoded_true_labels = label_encoder.inverse_transform(labels)
-
-    results.append(decoded_predictions)
-    accuracy = accuracy_score(decoded_true_labels, decoded_predictions)
-    precision = precision_score(decoded_true_labels, decoded_predictions, average="macro")
-    recall = recall_score(decoded_true_labels, decoded_predictions, average="macro")
-    f1= f1_score(decoded_true_labels, decoded_predictions, average="macro")
+    accuracy = accuracy_score(labels, predictions)
+    precision = precision_score(labels, predictions, average="macro")
+    recall = recall_score(labels, predictions, average="macro")
+    f1= f1_score(labels, predictions, average="macro")
 
     metrics = {
         "Accuracy": accuracy,
