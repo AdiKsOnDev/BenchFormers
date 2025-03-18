@@ -57,13 +57,13 @@ if not os.path.exists('./data/preprocessed/'):
         main_logger.info(f"Dataset preprocessed.")
 
         os.makedirs("./data/preprocessed/", exist_ok=True)
-        df.to_csv(f"./data/preprocessed/p_{dataset_file}", index=False)
-        main_logger.info(f"Preprocessed dataset saved to ./data/preprocessed/p_{dataset_file}.")
+        df.to_csv(f"./data/preprocessed/p_{dataset_file.split('/')[2]}", index=False)
+        main_logger.info(f"Preprocessed dataset saved to ./data/preprocessed/p_{dataset_file.split('/')[2]}.")
 else:
     main_logger.warning(f"Preprocessed files already exists. Skipping preprocessing.")
 
-train_df = limit_dataset(pd.read_csv(train_file), dataset_size)
-test_df = pd.read_csv(test_file)
+train_df = limit_dataset(pd.read_csv(f"./data/preprocessed/p_{train_file.split('/')[2]}"), dataset_size)
+test_df = pd.read_csv(f"./data/preprocessed/p_{test_file.split('/')[2]}")
 
 num_labels = len(train_df['label'].unique())
 models = models(choice, num_labels)
@@ -71,13 +71,13 @@ models = models(choice, num_labels)
 for model in models:
     main_logger.debug(f"Started the pipeline for {model.model_name}")
 
-    train_y = train_df['label']
-    test_y = test_df['label']
+    train_y = train_df['label'].to_list()
+    test_y = test_df['label'].to_list()
 
     main_logger.info(f"Tokenizing for {model.model_name}")
 
-    train_X = model.tokenize(train_df['text'])
-    test_X = model.tokenize(test_df['text'])
+    train_X = model.tokenize(train_df['text'].to_list())
+    test_X = model.tokenize(test_df['text'].to_list())
     train_dataset = Dataset(train_X, train_y)
     test_dataset = Dataset(test_X, test_y)
 

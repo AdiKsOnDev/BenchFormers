@@ -37,5 +37,6 @@ def preprocess_text(text):
     text = case_normalization(text)
     text = remove_stopwords(text)
     text = stem_text(text)
+    text = text.replace('[', '').replace(']', '').replace(',', '').replace("\'", '').replace('\"', '')
 
-    return text
+    return str(text)
