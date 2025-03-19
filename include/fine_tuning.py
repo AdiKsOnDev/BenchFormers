@@ -45,7 +45,10 @@ def fine_tune(model, training_data, testing_data, results_dir="./results/"):
     results_dir = f"{results_dir}/{model.model_name}/"
     checkpoints = glob.glob(os.path.join(results_dir, "checkpoint-*"))
 
-    trainer.train(max(checkpoints, key=lambda x: int(x.split('-')[-1])))
+    if checkpoints != []:
+        trainer.train(max(checkpoints, key=lambda x: int(x.split('-')[-1])))
+    else:
+        trainer.train()
 
     include_logger.debug("Training Successful")
 
