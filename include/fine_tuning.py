@@ -1,3 +1,5 @@
+import os
+import glob
 import logging
 from transformers import Trainer, TrainingArguments, DataCollatorWithPadding
 
@@ -10,8 +12,8 @@ def fine_tune(model, training_data, testing_data, results_dir="./results/"):
     training_args = TrainingArguments(
         output_dir=f"{results_dir}{model.model_name}/",
         num_train_epochs=3,
-        per_device_train_batch_size=4,
-        per_device_eval_batch_size=4,
+        per_device_train_batch_size=2,
+        per_device_eval_batch_size=2,
         logging_dir=f"{results_dir}{model.model_name}/logs",
         save_steps=1000,
         gradient_checkpointing=True,
@@ -19,6 +21,7 @@ def fine_tune(model, training_data, testing_data, results_dir="./results/"):
         save_total_limit=1,
         save_strategy="epoch",
         load_best_model_at_end=True,
+        resume_from_checkpoint=True,
         metric_for_best_model="eval_loss",
         remove_unused_columns=False,
         fp16=True,
@@ -39,12 +42,14 @@ def fine_tune(model, training_data, testing_data, results_dir="./results/"):
     )
 
     include_logger.debug("Trainer object created")
-    
-    trainer.train()
+    results_dir = f"{results_dir}/{model.model_name}/"
+    checkpoints = glob.glob(os.path.join(results_dir, "checkpoint-*"))
+
+    trainer.train(max(checkpoints, key=lambda x: int(x.split('-')[-1])))
 
     include_logger.debug("Training Successful")
 
     model.model.save_pretrained(
-        f"{results_dir}/{model.model_name}/fine_tuned_{model.model_name}")
+        f"{results_dir}/fine_tuned_{model.model_name}")
     model.tokenizer.save_pretrained(
-        f"{results_dir}/{model.model_name}/fine_tuned_{model.model_name}")
+        f"{results_dir}/fine_tuned_{model.model_name}")
