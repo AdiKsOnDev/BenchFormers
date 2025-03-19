@@ -6,6 +6,7 @@ from include.models.roformer import RoformerModel
 from include.models.longformer import LongformerModel
 from include.models.bigbird import BigBirdModel
 from include.models.legalbert import LegalBERTModel
+from include.models.modernbert import ModernBERT
 
 include_logger = logging.getLogger('include')
 
@@ -42,7 +43,9 @@ def models(choice, num_labels):
         BigBirdModel(model_name="google/bigbird-roberta-base",
                      num_labels=num_labels, max_length=4096),
         LegalBERTModel(model_name="nlpaueb/legal-bert-base-uncased",
-                       num_labels=num_labels)
+                       num_labels=num_labels),
+        ModernBERT(model_name="answerdotai/ModernBERT-base",
+                       num_labels=num_labels, max_length=8192)
     ]
 
     if choice.lower() == "all":
@@ -54,6 +57,8 @@ def models(choice, num_labels):
     elif choice.lower() == "bigbird":
         return [models[2]]
     elif choice.lower() == "legalbert":
+        return [models[3]]
+    elif choice.lower() == "modernbert":
         return [models[3]]
     else:
         raise ValueError(f"{choice} is not a valid choice of models!")

@@ -16,48 +16,56 @@ run1k:
 	python main.py --dataset_size 1000 --results_dir "./results/1000Samples/" --model "longformer"
 	python main.py --dataset_size 1000 --results_dir "./results/1000Samples/" --model "bigbird"
 	python main.py --dataset_size 1000 --results_dir "./results/1000Samples/" --model "legalbert"
+	python main.py --dataset_size 1000 --results_dir "./results/1000Samples/" --model "modernbert"
 
 run2k:
 	python main.py --dataset_size 2500 --results_dir "./results/2500Samples/" --model "roformer"
 	python main.py --dataset_size 2500 --results_dir "./results/2500Samples/" --model "longformer"
 	python main.py --dataset_size 2500 --results_dir "./results/2500Samples/" --model "bigbird"
 	python main.py --dataset_size 2500 --results_dir "./results/2500Samples/" --model "legalbert"
+	python main.py --dataset_size 2500 --results_dir "./results/2500Samples/" --model "modernbert"
 
 run5k:
 	python main.py --dataset_size 5000 --results_dir "./results/5000Samples/" --model "roformer"
 	python main.py --dataset_size 5000 --results_dir "./results/5000Samples/" --model "longformer"
 	python main.py --dataset_size 5000 --results_dir "./results/5000Samples/" --model "bigbird"
 	python main.py --dataset_size 5000 --results_dir "./results/5000Samples/" --model "legalbert"
+	python main.py --dataset_size 5000 --results_dir "./results/5000Samples/" --model "modernbert"
 
 run10k:
 	python main.py --dataset_size 10000 --results_dir "./results/10000Samples/" --model "roformer"
 	python main.py --dataset_size 10000 --results_dir "./results/10000Samples/" --model "longformer"
 	python main.py --dataset_size 10000 --results_dir "./results/10000Samples/" --model "bigbird"
 	python main.py --dataset_size 10000 --results_dir "./results/10000Samples/" --model "legalbert"
+	python main.py --dataset_size 10000 --results_dir "./results/10000Samples/" --model "modernbert"
 
 eval1k:
 	python validation.py --dir "./results/1000Samples/" --model "roformer"
 	python validation.py --dir "./results/1000Samples/" --model "longformer"
 	python validation.py --dir "./results/1000Samples/" --model "bigbird"
 	python validation.py --dir "./results/1000Samples/" --model "legalbert"
+	python validation.py --dir "./results/1000Samples/" --model "modernbert"
 
 eval2k:
 	python validation.py --dir "./results/2500Samples/" --model "roformer"
 	python validation.py --dir "./results/2500Samples/" --model "longformer"
 	python validation.py --dir "./results/2500Samples/" --model "bigbird"
 	python validation.py --dir "./results/2500Samples/" --model "legalbert"
+	python validation.py --dir "./results/2500Samples/" --model "modernbert"
 
 eval5k:
 	python validation.py --dir "./results/5000Samples/" --model "roformer"
 	python validation.py --dir "./results/5000Samples/" --model "longformer"
 	python validation.py --dir "./results/5000Samples/" --model "bigbird"
 	python validation.py --dir "./results/5000Samples/" --model "legalbert"
+	python validation.py --dir "./results/5000Samples/" --model "modernbert"
 
 eval10k:
 	python validation.py --dir "./results/10000Samples/" --model "roformer"
 	python validation.py --dir "./results/10000Samples/" --model "longformer"
 	python validation.py --dir "./results/10000Samples/" --model "bigbird"
 	python validation.py --dir "./results/10000Samples/" --model "legalbert"
+	python validation.py --dir "./results/10000Samples/" --model "modernbert"
 
 test: setup
 	python -m unittest discover -s tests

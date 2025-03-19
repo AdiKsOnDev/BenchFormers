@@ -6,6 +6,7 @@ from include.models.roformer import RoformerModel
 from include.models.longformer import LongformerModel
 from include.models.bigbird import BigBirdModel
 from include.models.legalbert import LegalBERTModel
+from include.models.modernbert import ModernBERT
 from include.utils import check_cuda, parse_validation_arguments
 
 check_cuda()
@@ -38,6 +39,10 @@ elif choice.lower() == "legalbert":
     models.append(
         LegalBERTModel(model_name=f"{directory}/nlpaueb/legal-bert-base-uncased/fine_tuned_nlpaueb/legal-bert-base-uncased/",
                        num_labels=num_labels)
+    )
+elif choice.lower() == "modernbert":
+    models.append(
+        ModernBERT(model_name=f"{directory}/answerdotai/ModernBERT-base/fine_tuned_answerdotai/ModernBERT_base")
     )
 
 
