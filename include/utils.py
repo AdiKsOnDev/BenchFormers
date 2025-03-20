@@ -59,7 +59,7 @@ def models(choice, num_labels):
     elif choice.lower() == "legalbert":
         return [models[3]]
     elif choice.lower() == "modernbert":
-        return [models[3]]
+        return [models[4]]
     else:
         raise ValueError(f"{choice} is not a valid choice of models!")
 
