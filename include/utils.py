@@ -45,7 +45,7 @@ def models(choice, num_labels):
         LegalBERTModel(model_name="nlpaueb/legal-bert-base-uncased",
                        num_labels=num_labels),
         ModernBERT(model_name="answerdotai/ModernBERT-base",
-                       num_labels=num_labels, max_length=8192)
+                       num_labels=num_labels, max_length=4096)
     ]
 
     if choice.lower() == "all":
