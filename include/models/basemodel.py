@@ -26,8 +26,7 @@ class BaseModel:
         models_logger.debug(f"Tokenising {len(texts)} texts")
         return self.tokenizer(
             texts,
-            max_length=self.max_length,
-            padding="max_length",
+            padding="longest",
             truncation=True,
             return_tensors="pt"
         )
