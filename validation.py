@@ -42,7 +42,7 @@ elif choice.lower() == "legalbert":
     )
 elif choice.lower() == "modernbert":
     models.append(
-        ModernBERT(model_name=f"{directory}/answerdotai/ModernBERT-base/fine_tuned_answerdotai/ModernBERT_base", max_length=4096)
+        ModernBERT(model_name=f"{directory}/answerdotai/ModernBERT-base/fine_tuned_answerdotai/ModernBERT-base", num_labels=num_labels, max_length=4096)
     )
 
 
